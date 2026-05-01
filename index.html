@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>27 Local videos</title>
+  <style>
+    :root {
+      --bg: #f3eee5;
+      --bg-accent: #ece3d5;
+      --card: rgba(255, 251, 245, 0.9);
+      --card-strong: #fffaf2;
+      --ink: #1b2430;
+      --muted: #5f6975;
+      --line: rgba(27, 36, 48, 0.12);
+      --teal: #0f6475;
+      --rust: #b65b44;
+      --gold: #bc8b2f;
+      --shadow: 0 24px 50px rgba(27, 36, 48, 0.12);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(182, 91, 68, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(15, 100, 117, 0.18), transparent 30%),
+        linear-gradient(180deg, #f5f1e9 0%, #eee6da 100%);
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background-image:
+        linear-gradient(rgba(27, 36, 48, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(27, 36, 48, 0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(circle at center, black, transparent 82%);
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 40px 20px 72px;
+    }
+
+    .hero {
+      padding: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: calc(var(--radius) + 4px);
+      background:
+        linear-gradient(135deg, rgba(255, 250, 242, 0.96), rgba(245, 236, 224, 0.92)),
+        var(--card);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .eyebrow,
+    .task-label,
+    .stat-label,
+    .meta {
+      font-family: Menlo, Monaco, "Courier New", monospace;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.76rem;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 14px;
+      color: var(--teal);
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Iowan Old Style", Georgia, serif;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      max-width: 12ch;
+      font-size: clamp(2.6rem, 5vw, 4.9rem);
+      line-height: 0.96;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .stat {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.54);
+      backdrop-filter: blur(14px);
+    }
+
+    .stat-value {
+      display: block;
+      font-size: 1.85rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 38px 0 18px;
+    }
+
+    .section-head p {
+      max-width: 640px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .quick-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 251, 245, 0.78);
+      color: var(--ink);
+      text-decoration: none;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .quick-links a:hover,
+    .quick-links a:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(15, 100, 117, 0.38);
+      background: rgba(255, 255, 255, 0.92);
+      outline: none;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 22px;
+    }
+
+    .task {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255, 251, 245, 0.94), rgba(248, 242, 232, 0.9));
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 420ms ease, transform 420ms ease;
+    }
+
+    .task.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .task-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .task-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 100, 117, 0.1);
+      color: var(--teal);
+      font-weight: 700;
+    }
+
+    .task h3 {
+      font-size: clamp(1.6rem, 3vw, 2.05rem);
+      overflow-wrap: anywhere;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      border: 1px solid rgba(15, 100, 117, 0.18);
+      background: rgba(15, 100, 117, 0.08);
+      color: var(--teal);
+    }
+
+    .task-copy {
+      margin: 0 0 18px;
+      color: var(--muted);
+      max-width: 780px;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .video-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(250, 246, 239, 0.84));
+    }
+
+    .video-card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .video-card h4 {
+      font-size: 1.04rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .meta {
+      color: var(--muted);
+    }
+
+    video {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      border-radius: 14px;
+      background: #101820;
+      display: block;
+    }
+
+    @media (max-width: 980px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head,
+      .task-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      main {
+        padding: 20px 14px 48px;
+      }
+
+      .hero,
+      .task {
+        padding: 20px;
+      }
+
+      h1 {
+        max-width: none;
+      }
+
+      .status-pill {
+        white-space: normal;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .task,
+      .quick-links a {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <span class="eyebrow">SHARPA Task Review</span>
+      <h1>27 Local videos</h1>
+      <p>
+        This page collects every task video in this folder into a single local review site. Each section embeds the corresponding recording directly from the <code>videos</code> folder for quick scanning and sharing.
+      </p>
+
+      <div class="stats" aria-label="Summary statistics">
+        <div class="stat">
+          <span class="stat-value">27</span>
+          <span class="stat-label">Task demos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">27</span>
+          <span class="stat-label">Local videos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">19:16</span>
+          <span class="stat-label">Total runtime</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="task-overview">
+      <div class="section-head">
+        <div>
+          <h2 id="task-overview">Task Overview</h2>
+        </div>
+        <p>
+          The navigation below links to each task clip. Videos are loaded from the local <strong>videos</strong> directory, so keep that folder next to this page when moving or sharing the site.
+        </p>
+      </div>
+
+      <nav class="quick-links" id="task-nav" aria-label="Task links"></nav>
+    </section>
+
+    <section class="task-list" id="task-list" aria-label="Task demonstrations"></section>
+  </main>
+
+  <script>
+    const tasks = [
+      { slug: "ball-toy", title: "Ball Toy", video: { file: "ball_toy.mp4", duration: "0:34" } },
+      { slug: "blocks", title: "Blocks", video: { file: "blocks.mp4", duration: "0:55" } },
+      { slug: "bottles", title: "Bottles", video: { file: "bottles.mp4", duration: "0:28" } },
+      { slug: "bowling", title: "Bowling", video: { file: "bowling.mp4", duration: "0:36" } },
+      { slug: "building-blocks", title: "Building Blocks", video: { file: "building_blocks.mp4", duration: "0:51" } },
+      { slug: "cup-stacking", title: "Cup Stacking", video: { file: "cup_stacking.mp4", duration: "1:00" } },
+      { slug: "dishrack", title: "Dishrack", video: { file: "dishrack.mp4", duration: "0:29" } },
+      { slug: "drawer", title: "Drawer", video: { file: "drawer.mp4", duration: "0:49" } },
+      { slug: "fishing-toy", title: "Fishing Toy", video: { file: "fishing_toy.mp4", duration: "1:01" } },
+      { slug: "hook-pull", title: "Hook Pull", video: { file: "hook_pull.mp4", duration: "0:29" } },
+      { slug: "insert-shape-toy", title: "Insert Shape Toy", video: { file: "insert_shape_toy.mp4", duration: "0:37" } },
+      { slug: "jenga", title: "Jenga", video: { file: "jenga.mp4", duration: "0:40" } },
+      { slug: "key-lock", title: "Key Lock", video: { file: "key_lock.mp4", duration: "0:27" } },
+      { slug: "key-peg", title: "Key Peg", video: { file: "key_peg.mp4", duration: "0:31" } },
+      { slug: "latch-drawer", title: "Latch Drawer", video: { file: "latch_drawer.mp4", duration: "0:37" } },
+      { slug: "marble-maze", title: "Marble Maze", video: { file: "marble_maze.mp4", duration: "0:43" } },
+      { slug: "marker", title: "Marker", video: { file: "marker.mp4", duration: "1:06" } },
+      { slug: "mug-drawer", title: "Mug Drawer", video: { file: "mug_drawer.mp4", duration: "0:26" } },
+      { slug: "mug-flip", title: "Mug Flip", video: { file: "mug_flip.mp4", duration: "0:40" } },
+      { slug: "mug-pour", title: "Mug Pour", video: { file: "mug_pour.mp4", duration: "0:21" } },
+      { slug: "mug-tree", title: "Mug Tree", video: { file: "mug_tree.mp4", duration: "0:36" } },
+      { slug: "nut-assembly", title: "Nut Assembly", video: { file: "nut_assembly.mp4", duration: "0:40" } },
+      { slug: "ring-toss", title: "Ring Toss", video: { file: "ring_toss.mp4", duration: "0:40" } },
+      { slug: "safe", title: "Safe", video: { file: "safe.mp4", duration: "0:40" } },
+      { slug: "sweep", title: "Sweep", video: { file: "sweep.mp4", duration: "0:54" } },
+      { slug: "tea-set", title: "Tea Set", video: { file: "tea_set.mp4", duration: "1:29" } },
+      { slug: "towel-holder", title: "Towel Holder", video: { file: "towel_holder.mp4", duration: "0:55" } }
+    ];
+
+    const taskNav = document.getElementById("task-nav");
+    const taskList = document.getElementById("task-list");
+
+    function candidatePaths(file) {
+      return [`videos/${file}`, file];
+    }
+
+    function createVideoCard(label, video) {
+      const card = document.createElement("article");
+      card.className = "video-card";
+
+      const head = document.createElement("div");
+      head.className = "video-card-head";
+
+      const title = document.createElement("h4");
+      title.textContent = label;
+      head.appendChild(title);
+
+      const meta = document.createElement("span");
+      meta.className = "meta";
+      meta.textContent = video.duration;
+      head.appendChild(meta);
+
+      const element = document.createElement("video");
+      element.controls = true;
+      element.preload = "metadata";
+      element.playsInline = true;
+      element.dataset.paths = JSON.stringify(candidatePaths(video.file));
+
+      const paths = candidatePaths(video.file);
+      let currentPathIndex = 0;
+
+      function loadCurrentPath() {
+        element.src = paths[currentPathIndex];
+      }
+
+      element.addEventListener("error", () => {
+        if (currentPathIndex < paths.length - 1) {
+          currentPathIndex += 1;
+          loadCurrentPath();
+        }
+      }, { once: false });
+
+      loadCurrentPath();
+
+      card.appendChild(head);
+      card.appendChild(element);
+      return card;
+    }
+
+    tasks.forEach((task, index) => {
+      const link = document.createElement("a");
+      link.href = `#${task.slug}`;
+      link.textContent = task.title;
+      taskNav.appendChild(link);
+
+      const section = document.createElement("section");
+      section.className = "task";
+      section.id = task.slug;
+
+      const header = document.createElement("div");
+      header.className = "task-header";
+
+      const left = document.createElement("div");
+      left.className = "task-header-left";
+
+      const label = document.createElement("span");
+      label.className = "task-label";
+      label.textContent = String(index + 1).padStart(2, "0");
+      left.appendChild(label);
+
+      const title = document.createElement("h3");
+      title.textContent = task.title;
+      left.appendChild(title);
+
+      const status = document.createElement("span");
+      status.className = "status-pill";
+      status.textContent = "Task demo";
+
+      header.appendChild(left);
+      header.appendChild(status);
+
+      const copy = document.createElement("p");
+      copy.className = "task-copy";
+      copy.textContent = "Local task recording embedded for direct review.";
+
+      const media = document.createElement("div");
+      media.className = "media-grid";
+      media.appendChild(createVideoCard("Task video", task.video));
+
+      section.appendChild(header);
+      section.appendChild(copy);
+      section.appendChild(media);
+      taskList.appendChild(section);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14 }
+    );
+
+    document.querySelectorAll(".task").forEach((task) => observer.observe(task));
+  </script>
+</body>
+</html>
